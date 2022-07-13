@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import nl.tijsbeek.prisonutilmod.items.ItemEventHandler;
 import nl.tijsbeek.prisonutilmod.items.ItemLoader;
 import nl.tijsbeek.prisonutilmod.minereset.MineTimer;
 import org.slf4j.Logger;
@@ -27,9 +28,11 @@ public class PrisonUtilMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
+        ItemLoader itemLoader = new ItemLoader();
+
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new MineTimer());
-        MinecraftForge.EVENT_BUS.register(new ItemLoader());
+        MinecraftForge.EVENT_BUS.register(new ItemEventHandler(itemLoader));
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GENERAL_SPEC,"prison_util_mod_config.toml");
     }

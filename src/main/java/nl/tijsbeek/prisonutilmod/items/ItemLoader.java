@@ -1,8 +1,6 @@
 package nl.tijsbeek.prisonutilmod.items;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import nl.tijsbeek.prisonutilmod.items.entities.BasicItem;
 
 import java.io.IOException;
@@ -28,14 +26,7 @@ public class ItemLoader {
         }
     }
 
-    @SubscribeEvent
-    public void onClientChatEvent(ClientChatEvent event) {
-        String message = event.getMessage();
-
-        if (message.equals("!reload")) {
-            loadItems();
-
-            event.setCanceled(true);
-        }
+    public List<BasicItem> getItems() {
+        return items;
     }
 }
