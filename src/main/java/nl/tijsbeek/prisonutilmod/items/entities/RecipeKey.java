@@ -1,4 +1,4 @@
-package nl.tijsbeek.prisonutilmod.items;
+package nl.tijsbeek.prisonutilmod.items.entities;
 
 public record RecipeKey(
         String key,
