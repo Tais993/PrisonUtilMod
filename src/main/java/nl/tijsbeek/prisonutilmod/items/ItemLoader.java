@@ -6,13 +6,14 @@ import nl.tijsbeek.prisonutilmod.items.entities.BasicItem;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import static nl.tijsbeek.prisonutilmod.config.Config.ITEMS_PATH;
 
 public class ItemLoader {
 
-    private List<BasicItem> items;
+    private List<BasicItem> items = Collections.emptyList();
 
     public void loadItems() {
         ObjectMapper objectMapper = new ObjectMapper();

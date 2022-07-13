@@ -14,6 +14,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import nl.tijsbeek.prisonutilmod.items.ItemEventHandler;
 import nl.tijsbeek.prisonutilmod.items.ItemLoader;
 import nl.tijsbeek.prisonutilmod.minereset.MineTimer;
+import nl.tijsbeek.prisonutilmod.worthcalculator.InventoryCalculator;
 import org.slf4j.Logger;
 
 import static nl.tijsbeek.prisonutilmod.config.Config.GENERAL_SPEC;
@@ -33,6 +34,7 @@ public class PrisonUtilMod {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new MineTimer());
         MinecraftForge.EVENT_BUS.register(new ItemEventHandler(itemLoader));
+        MinecraftForge.EVENT_BUS.register(new InventoryCalculator(itemLoader));
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GENERAL_SPEC,"prison_util_mod_config.toml");
     }
