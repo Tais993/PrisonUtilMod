@@ -15,6 +15,7 @@ public class BasicItem {
     private final double sellPrice;
     private final String itemTag;
     private final Item item;
+    private final boolean smeltBeforeSell;
 
     private final String nbtDisplayName;
     private final BasicRecipe recipe;
@@ -24,6 +25,7 @@ public class BasicItem {
             @JsonProperty("purchasePrice") double purchasePrice,
             @JsonProperty("sellPrice") double sellPrice,
             @JsonProperty("itemTag") String itemTag,
+            @JsonProperty("smeltBeforeSell") boolean smeltBeforeSell,
             @JsonProperty("nbtDisplayName") String nbtDisplayName,
             @JsonProperty("recipe") BasicRecipe recipe
     ) {
@@ -31,6 +33,7 @@ public class BasicItem {
         this.sellPrice = sellPrice;
         this.itemTag = itemTag;
         this.item = getItem(itemTag);
+        this.smeltBeforeSell = smeltBeforeSell;
         this.nbtDisplayName = nbtDisplayName;
         this.recipe = recipe;
     }
@@ -59,6 +62,10 @@ public class BasicItem {
 
     public Item getItem() {
         return item;
+    }
+
+    public boolean smeltBeforeSell() {
+        return smeltBeforeSell;
     }
 
     public String getNbtDisplayName() {

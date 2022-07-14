@@ -44,7 +44,7 @@ public class InventoryCalculator {
                         .map(itemStack -> {
                             for (BasicItem basicItem : basicItems) {
                                 if (basicItem.isEqualItem(itemStack)) {
-                                    return new BasicItemWrapper(itemStack.getCount(), basicItem);
+                                    return new BasicItemWrapper(itemStack.getCount(), basicItem, itemLoader);
                                 }
                             }
 

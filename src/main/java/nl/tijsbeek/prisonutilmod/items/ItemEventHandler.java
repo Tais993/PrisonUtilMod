@@ -19,6 +19,10 @@ public class ItemEventHandler {
             itemLoader.loadItems();
 
             event.setCanceled(true);
+        } else if (message.equals("!reset-map")) {
+            itemLoader.reloadItemToFurnaceResult();
+
+            event.setCanceled(true);
         }
     }
 }
