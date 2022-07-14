@@ -24,6 +24,9 @@ public class ItemLoader {
     private Map<ItemDisplayNameWrapper, BasicItem> itemToBasicItem = Collections.emptyMap();
     private List<BasicItem> items = Collections.emptyList();
 
+    /**
+     * Loads the items based of the given location by the config.
+     */
     public void loadItems() {
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,6 +43,11 @@ public class ItemLoader {
         }
     }
 
+    /**
+     * Returns a map, which maps item's to what happens when they get put into the furnace.
+     *
+     * @return itemToFurnaceResult map
+     */
     public Map<Item, Item> getItemToFurnaceResult() {
         if (itemToFurnaceResult == null) {
             reloadItemToFurnaceResult();
@@ -48,6 +56,12 @@ public class ItemLoader {
         return itemToFurnaceResult;
     }
 
+    /**
+     * Reloads the itemToFurnaceResult map.
+     * <p>
+     * Possible due to different recipes in the server, this can be reloaded.
+     * <br/>This is mainly for future compatability.
+     */
     public void reloadItemToFurnaceResult() {
         Map<Item, Item> itemToFurnaceResult = new HashMap<>();
 

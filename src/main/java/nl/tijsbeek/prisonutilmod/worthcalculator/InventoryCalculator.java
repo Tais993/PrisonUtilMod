@@ -27,7 +27,14 @@ public class InventoryCalculator {
 
     private double inventoryWorth;
 
-
+    /**
+     * Starts the calculations.
+     * <p>
+     * This schedules a thread, which checks the inventory's worth asynchronously every second.
+     * Items are reloaded automatically every time, so changes can be noticed instantly.
+     *
+     * @param itemLoader the {@link ItemLoader}
+     */
     public InventoryCalculator(ItemLoader itemLoader) {
         this.itemLoader = itemLoader;
 

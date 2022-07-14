@@ -25,6 +25,13 @@ public class MineTimer {
         resetTimer();
     }
 
+    /**
+     * Restarts the timer at 1.
+     * <p>
+     * This gets recursively called by the timer itself.
+     * <p>
+     * Before resetting, one should make sure the existing {@link #timer timer} is cancelled.
+     */
     public void resetTimer() {
         seconds = 0;
         minute = 0;
