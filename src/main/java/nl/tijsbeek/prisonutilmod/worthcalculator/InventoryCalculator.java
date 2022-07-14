@@ -5,11 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import nl.tijsbeek.prisonutilmod.items.ItemLoader;
 import nl.tijsbeek.prisonutilmod.items.entities.BasicItem;
-import nl.tijsbeek.prisonutilmod.items.entities.BasicItemWrapper;
+import nl.tijsbeek.prisonutilmod.items.entities.ItemDisplayNameWrapper;
 
 import java.awt.*;
 import java.util.List;
@@ -44,17 +45,37 @@ public class InventoryCalculator {
                         .map(itemStack -> {
                             for (BasicItem basicItem : basicItems) {
                                 if (basicItem.isEqualItem(itemStack)) {
-                                    return new BasicItemWrapper(itemStack.getCount(), basicItem, itemLoader);
+                                    return getSellWorth(itemStack.getCount(), basicItem, itemLoader);
                                 }
                             }
 
                             return null;
-                        }).filter(Objects::nonNull)
-                        .mapToDouble(BasicItemWrapper::getSellWorth)
+                        })
+                        .filter(Objects::nonNull)
+                        .mapToDouble(Double::doubleValue)
                         .sum();
             }
 
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+
+    /**
+     * Multiplies the amount of items by the sell-price
+     *
+     * @return how much worth the items are
+     */
+    public static Double getSellWorth(int amount, BasicItem basicItem, ItemLoader itemLoader) {
+        if (basicItem.smeltBeforeSell()) {
+            Item smeltedItem = itemLoader.getItemToFurnaceResult().get(basicItem.getItem());
+
+            BasicItem smeltedBasicItem = itemLoader.getBasicItem(ItemDisplayNameWrapper.ofItem(smeltedItem));
+
+            return getSellWorth(amount, smeltedBasicItem, itemLoader);
+        }
+
+
+        return amount * basicItem.getSellPrice();
     }
 
 
