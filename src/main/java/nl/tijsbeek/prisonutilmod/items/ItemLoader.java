@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import nl.tijsbeek.prisonutilmod.items.entities.BasicItem;
+import nl.tijsbeek.prisonutilmod.items.entities.ItemDisplayNameWrapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,7 +21,7 @@ import static nl.tijsbeek.prisonutilmod.config.Config.ITEMS_PATH;
 public class ItemLoader {
 
     private Map<Item, Item> itemToFurnaceResult;
-    private Map<Item, BasicItem> itemToBasicItem = Collections.emptyMap();
+    private Map<ItemDisplayNameWrapper, BasicItem> itemToBasicItem = Collections.emptyMap();
     private List<BasicItem> items = Collections.emptyList();
 
     public void loadItems() {
@@ -32,13 +33,12 @@ public class ItemLoader {
             items = Collections.unmodifiableList(objectMapper.readValue(itemsJson, objectMapper.getTypeFactory().constructCollectionType(List.class, BasicItem.class)));
 
             itemToBasicItem = items.stream()
-                    .collect(Collectors.toUnmodifiableMap(BasicItem::getItem, Function.identity()));
+                    .collect(Collectors.toUnmodifiableMap(BasicItem::toItemDisplayNameWrapper, Function.identity()));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public Map<Item, Item> getItemToFurnaceResult() {
         if (itemToFurnaceResult == null) {
@@ -73,11 +73,11 @@ public class ItemLoader {
         return items;
     }
 
-    public Map<Item, BasicItem> getItemToBasicItem() {
+    public Map<ItemDisplayNameWrapper, BasicItem> getItemToBasicItem() {
         return itemToBasicItem;
     }
 
-    public BasicItem getBasicItem(Item item) {
-        return itemToBasicItem.get(item);
+    public BasicItem getBasicItem(ItemDisplayNameWrapper wrapper) {
+        return itemToBasicItem.get(wrapper);
     }
 }

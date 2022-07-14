@@ -76,6 +76,10 @@ public class BasicItem {
         return recipe;
     }
 
+    public ItemDisplayNameWrapper toItemDisplayNameWrapper() {
+        return new ItemDisplayNameWrapper(item, nbtDisplayName);
+    }
+
     /**
      * Checks or the item & NBT tag is the same.
      * This ignores the amount, and other info.

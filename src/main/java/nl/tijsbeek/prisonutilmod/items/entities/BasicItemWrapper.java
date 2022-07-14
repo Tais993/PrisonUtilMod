@@ -18,7 +18,7 @@ public record BasicItemWrapper(
         if (basicItem.smeltBeforeSell()) {
             Item smeltedItem = itemLoader.getItemToFurnaceResult().get(basicItem.getItem());
 
-            BasicItem smeltedBasicItem = itemLoader.getBasicItem(smeltedItem);
+            BasicItem smeltedBasicItem = itemLoader.getBasicItem(ItemDisplayNameWrapper.ofItem(smeltedItem));
 
             return amount * smeltedBasicItem.getSellPrice();
         }
