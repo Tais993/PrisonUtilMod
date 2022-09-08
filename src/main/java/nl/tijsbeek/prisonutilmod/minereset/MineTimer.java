@@ -11,6 +11,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 public class MineTimer {
 
@@ -21,8 +24,29 @@ public class MineTimer {
 
     private ScheduledFuture<?> timer;
 
+    private final Lock lock = new ReentrantLock();
+
     public MineTimer() {
         resetTimer();
+    }
+
+
+    public void accessTimer(Consumer<ScheduledFuture<?>> timerUser) {
+        lock.lock();
+        try {
+            timerUser.accept(timer);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setTimer(ScheduledFuture<?> timer) {
+        lock.lock();
+        try {
+            this.timer = timer;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -36,7 +60,7 @@ public class MineTimer {
         seconds = 0;
         minute = 0;
 
-        timer = executorService.scheduleAtFixedRate(() -> {
+        setTimer(executorService.scheduleAtFixedRate(() -> {
             seconds++;
 
             if (seconds == 60) {
@@ -45,10 +69,10 @@ public class MineTimer {
 
                 if (minute == 5) {
                     executorService.schedule(this::resetTimer, 1, TimeUnit.SECONDS);
-                    timer.cancel(false);
+                    accessTimer(timer -> timer.cancel(true));
                 }
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS));
     }
 
     @SubscribeEvent
@@ -65,7 +89,7 @@ public class MineTimer {
         String message = event.getMessage();
 
         if (message.equals("!reset-mine")) {
-            timer.cancel(true);
+            accessTimer(timer -> timer.cancel(true));
             resetTimer();
 
             event.setCanceled(true);
