@@ -19,6 +19,7 @@ public final class MineTimer {
     private static final Logger logger = LoggerFactory.getLogger(MineTimer.class);
 
     private static final long SECONDS_IN_MINUTE = 60L;
+    private String timeString;
 
     private long seconds = 0L;
 
@@ -28,17 +29,40 @@ public final class MineTimer {
 
         executorService.scheduleAtFixedRate(() -> {
             seconds++;
-            logger.warn("Seconds: {}", seconds);
+            logger.info("Seconds: {}", seconds);
 
             if (seconds == Config.MINE_RESET_COOLDOWN.get()) {
                 resetTimeTo(0);
             }
 
+            timeString = generateTimeString(seconds);
+
         }, 0, 1, TimeUnit.SECONDS);
+
 
         executorService.scheduleAtFixedRate(() -> {
             resetTimerFromInstant(Instant.ofEpochMilli(Config.LAST_TIME_MINE_RESET.get()));
         }, 0, 10, TimeUnit.SECONDS);
+    }
+
+
+    /**
+     * Generates a String whcih represents the given seconds based on the following format: {@code %02d:%02d}
+     * <p>
+     * Example, for 71 seconds this would return `01:11`.
+     *
+     * @param seconds amount of seconds
+     * @return the given time in a formatted String
+     */
+    private static String generateTimeString(long seconds) {
+        int displayMinutes = 0;
+        long displaySeconds = seconds;
+        while (SECONDS_IN_MINUTE <= displaySeconds) {
+            displayMinutes++;
+            displaySeconds -= SECONDS_IN_MINUTE;
+        }
+
+        return "%02d:%02d".formatted(displayMinutes, displaySeconds);
     }
 
 
@@ -79,17 +103,7 @@ public final class MineTimer {
     @SubscribeEvent
     public void onRenderGui(RenderGameOverlayEvent event) {
         if (!event.isCancelable() && RenderGameOverlayEvent.ElementType.TEXT == event.getType()) {
-
-            int displayMinutes = 0;
-            long displaySeconds = seconds;
-            while (SECONDS_IN_MINUTE <= displaySeconds) {
-                displayMinutes++;
-                displaySeconds -= SECONDS_IN_MINUTE;
-            }
-
-            String format = "%02d:%02d".formatted(displayMinutes, displaySeconds);
-
-            Minecraft.getInstance().font.drawShadow(new PoseStack(), format, 0, 0, Color.ORANGE.getRGB(), true);
+            Minecraft.getInstance().font.drawShadow(new PoseStack(), timeString, 0, 0, Color.ORANGE.getRGB(), true);
         }
     }
 
