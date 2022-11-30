@@ -11,8 +11,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import nl.tijsbeek.prisonutilmod.items.ItemLoader;
 import nl.tijsbeek.prisonutilmod.items.entities.BasicItem;
 import nl.tijsbeek.prisonutilmod.items.entities.ItemDisplayNameWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -20,6 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class InventoryCalculator {
+    private static final Logger logger = LoggerFactory.getLogger(InventoryCalculator.class);
 
     private final ItemLoader itemLoader;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -42,7 +45,9 @@ public class InventoryCalculator {
             LocalPlayer player = Minecraft.getInstance().player;
 
 
-            if (player != null) {
+            if (player == null) {
+                logger.debug("Not calculating inventory's worth, not in a server/world");
+            } else {
                 NonNullList<Slot> slots = player.inventoryMenu.slots;
 
                 List<BasicItem> basicItems = itemLoader.getItems();
